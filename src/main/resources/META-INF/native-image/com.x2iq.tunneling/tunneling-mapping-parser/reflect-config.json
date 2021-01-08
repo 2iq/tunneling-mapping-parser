@@ -1,0 +1,23 @@
+[
+  {
+    "name": "com.x2iq.tunneling.mappingparser.model.Mappings",
+    "allPublicFields": true,
+    "methods": [
+      { "name": "<init>", "parameterTypes": [] }
+    ]
+  },
+  {
+    "name": "com.x2iq.tunneling.mappingparser.model.Mapping",
+    "allPublicFields": true,
+    "methods": [
+      { "name": "<init>", "parameterTypes": [] }
+    ]
+  },
+  {
+    "name": "com.x2iq.tunneling.mappingparser.model.Route",
+    "allPublicFields": true,
+    "methods": [
+      { "name": "<init>", "parameterTypes": [] }
+    ]
+  }
+]
