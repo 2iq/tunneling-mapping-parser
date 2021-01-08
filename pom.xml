@@ -7,6 +7,8 @@
 
   <name>tunneling-mapping-parser</name>
 
+  <description>Small CLI tool that can parse tunneling mapping files.</description>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
