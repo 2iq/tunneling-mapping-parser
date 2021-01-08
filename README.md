@@ -32,7 +32,7 @@ This is general usage:
 ```text
 Usage: tunneling-mapping-parser (-n | -s | (-m=<mappingIndex> [-p=<propertyName>])) [-f=<mappingFile>]
   -n, --number-of-mappings
-  -s, --seq-for-mappings
+  -s, --seq-of-mappings
   -m, --get-mapping=<mappingIndex>
   -p, --property=<propertyName>
   -f, --file=<mappingFile>
@@ -62,7 +62,7 @@ tunneling-mapping-parser --number-of-mappings
 # 2
 ```
 
-### `-s, --seq-for-mappings`
+### `-s, --seq-of-mappings`
 
 Prints sequence for the number of rules in the mapping file.
 This is mainly for iterating rules in the shell/bash loop.
@@ -77,7 +77,7 @@ tunneling-mapping-parser -s
 ```
 
 ```shell
-tunneling-mapping-parser --seq-for-mappings
+tunneling-mapping-parser --seq-of-mappings
 # output:
 # 0 1
 ```

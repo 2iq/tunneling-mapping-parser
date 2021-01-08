@@ -43,7 +43,7 @@ class MappingParserTest extends Specification {
     where:
     cliArgs                                  || res
     '-s'                                     || '0 1'
-    '--seq-for-mappings'                     || '0 1'
+    '--seq-of-mappings'                      || '0 1'
     '-n'                                     || '2'
     '--number-of-mappings'                   || '2'
     '-m 0'                                   || '[1 -> 1.1.1.1:1] (first description)'

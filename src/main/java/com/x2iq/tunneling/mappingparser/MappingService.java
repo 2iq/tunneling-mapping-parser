@@ -29,7 +29,7 @@ public class MappingService {
     return mappings[index];
   }
 
-  public String seqForMappings() {
+  public String seqOfMappings() {
     StringBuilder builder = new StringBuilder("0");
 
     for (int i = 1; i < numberOfMappings(); i++) {

@@ -37,8 +37,8 @@ public class Cli implements Callable<Integer> {
 
     if (mainOptions.printNumberOfMappings) {
       System.out.println(mappingService.numberOfMappings());
-    } else if (mainOptions.printSeqForMappings) {
-      System.out.println(mappingService.seqForMappings());
+    } else if (mainOptions.printSeqOfMappings) {
+      System.out.println(mappingService.seqOfMappings());
     } else {
       System.out.println(getWantedMapping(mappingService));
     }
@@ -96,8 +96,8 @@ public class Cli implements Callable<Integer> {
     @CommandLine.Option(names = {"-n", "--number-of-mappings"}, required = true)
     boolean printNumberOfMappings;
 
-    @CommandLine.Option(names = {"-s", "--seq-for-mappings"}, required = true)
-    boolean printSeqForMappings;
+    @CommandLine.Option(names = {"-s", "--seq-of-mappings"}, required = true)
+    boolean printSeqOfMappings;
 
     @CommandLine.Option(names = {"-m", "--get-mapping"}, required = true)
     int mappingIndex;
