@@ -24,6 +24,59 @@ mappings:
 In the file, we have two tunneling rules.
 With this tool, you have different operations you can archive.
 
+## mapping file
+
+The structure of the mapping file is summarized here:
+
+```yaml
+mapping:
+  - description: <string>
+    acceptPort: <int>
+    routeTo:
+      ip: <string>
+      port: <int>
+```
+
+You can have as many rules as you want in the `mapping` array.
+All fields are mandatory, and you can't leave out any of the fields.
+It's also not possible to add any other fields.
+If your file is multi-document YAML, then the only first document is read.
+
+### `description`
+
+The `description` is a string.
+You can put anything you want to this string.
+The purpose of this field is to describe the rule.
+There is no validation or any additional logic based on this field.
+
+### `acceptPort`
+
+The `acceptPort` is an integer.
+Valid values are between `1` and `65535`.
+However, there is no validation, and any (32-bit) integer will work.
+This value represents the port on the source server.
+The `acceptPort` value should be unique because it's impossible to assign the same port twice.
+The parser doesn't check the uniqueness of values inside of the file.
+
+### `routeTo`
+
+The `routeTo` is an object that contains coordinates of the target server.
+
+### `routeTo.ip`
+
+The `ip` is a string.
+Valid content is the IPv4 address.
+The value represents the IP address of the target server.
+It's not possible to use the hostname in this field (and currently, there is no way to use a hostname for the target server at all).
+There is no check if the value is a valid IP address.
+
+### `routeTo.port`
+
+The `port` is int.
+Valid values are between `1` and `65535`.
+Same as for `acceptPort`, there is no validation if values are correct.
+This value represents the port on the target server.
+
 ## Usage
 
 This is general usage:
