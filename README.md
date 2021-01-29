@@ -1,7 +1,6 @@
 # tunneling-mapping-parser
 
-This is a small CLI tool that can parse yml file which represents mappings for tunneling.
-This is a component of _tunneling_ product.
+The tunneling-mapping-parser is a small CLI tool that can parse a YAML file representing mappings for tunneling.
 
 ## General overview
 
@@ -39,10 +38,24 @@ Usage: tunneling-mapping-parser (-n | -s | (-m=<mappingIndex> [-p=<propertyName>
 ```
 
 You need to pass exactly one main argument.
-Main arguments are `-n`, `-s` and `-m`.
+The main arguments are `-n`, `-s` and `-m`.
 
-Each argument is documented in detail below.
-All examples below are for example file above.
+Detailed documentation for each argument is below.
+All examples below are considering to have mapping file with follows content:
+
+```yaml
+mappings:
+  - description: forward psql
+    acceptPort: 1234
+    routeTo:
+      ip: 1.3.3.7
+      port: 5432
+  - description: forward https
+    acceptPort: 443
+    routeTo:
+      ip: 4.8.15.16
+      port: 443
+```
 
 ### `-n, --number-of-mappings`
 
@@ -65,8 +78,8 @@ tunneling-mapping-parser --number-of-mappings
 ### `-s, --seq-of-mappings`
 
 Prints sequence for the number of rules in the mapping file.
-This is mainly for iterating rules in the shell/bash loop.
-This is the same output as `seq 0 X-1` command (where X is number-of-mappings).
+The primary purpose is to iterate rules in the shell/bash loop.
+The output is the same as the `seq 0 X-1` command (where X is number-of-mappings).
 
 Examples:
 
@@ -82,7 +95,7 @@ tunneling-mapping-parser --seq-of-mappings
 # 0 1
 ```
 
-This is an example of usage in a bash script:
+An example of usage in a bash script:
 
 ```shell
 #!/bin/bash
@@ -100,8 +113,8 @@ done
 
 Prints human-readable summary of wanted mapping.
 You need to pass the index and not the number of a rule you want.
-For example above the value `0` would return the first rule and the value `1` would return the second rule.
-You can also request a single mapping parameter (machine-readable) by using an additional `-p` parameter.
+The value `0` returns the first rule, the value `1` returns the second rule, and so on.
+You can also request a single mapping parameter (machine-readable) using an additional `-p` parameter.
 
 Examples:
 
@@ -119,7 +132,7 @@ tunneling-mapping-parser --get-mapping 1
 
 ### `-p, --property <propertyName>`
 
-This argument can only be used along with `-m`.
+This argument can only be used together with `-m`.
 Possible values for `propertyName` are:
 
 - `description` - prints description of wanted rule
@@ -167,9 +180,9 @@ tunneling-mapping-parser -m 0 -p routeToPort
 
 ### `-f, --file <mappingFile>`
 
-Mapping file to be parsed.
+Specifies alternative mapping file.
 This argument is optional.
-If this argument is omitted then `mapping.yml` is used.
+If this argument is omitted, then `mapping.yml` is used.
 
 Examples:
 
