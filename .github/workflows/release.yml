@@ -15,6 +15,7 @@ on:
 
 env:
   slackNotificationsChannel: github_actions
+  buildxVersion: v0.5.1
 
 jobs:
 
