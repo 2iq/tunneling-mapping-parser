@@ -73,7 +73,7 @@ jobs:
       # TODO graal-native build is very slow on qemu
       #  use arm instance once available https://github.com/github/roadmap/issues/95
       - name: Setup QEMU for docker
-        uses: docker/setup-qemu-action@v1.1.0
+        uses: docker/setup-qemu-action@v1.2.0
         with:
           platforms: arm64
 
