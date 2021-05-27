@@ -133,7 +133,7 @@ jobs:
     steps:
       - name: Add MSVC to PATH  # See https://www.graalvm.org/reference-manual/native-image/#prerequisites
         if: runner.os == 'Windows'
-        uses: ilammy/msvc-dev-cmd@v1.8.0
+        uses: ilammy/msvc-dev-cmd@v1.8.1
 
       - name: Setup GraalVM
         uses: DeLaGuardo/setup-graalvm@4.0
