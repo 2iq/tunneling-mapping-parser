@@ -1,0 +1,205 @@
+# Necessary secrets:
+#
+# SLACK_BOT_TOKEN - necessary for sending build status to slack. Starts with `xoxb-`.
+#
+# This workflow also uses GITHUB_TOKEN secret. Github action workflow
+# automatically creates GITHUB_TOKEN secret. There is no need to do that
+# manually.
+
+name: Release new version
+
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+'  # matches versions tag like 1.0
+
+env:
+  slackNotificationsChannel: github_actions
+
+jobs:
+
+  prepare:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 1
+
+    steps:
+      - name: Notify slack start
+        id: slack
+        uses: voxmedia/github-action-slack-notify-build@v1.5.0
+        env:
+          SLACK_BOT_TOKEN: ${{secrets.SLACK_BOT_TOKEN}}
+        with:
+          channel: ${{env.slackNotificationsChannel}}
+          status: 'running #${{github.run_number}}'
+          color: warning
+
+      - uses: actions/checkout@v2.3.4
+
+      - uses: walery/get-xml-info@master  # TODO use fixed version
+        id: graalvm-version
+        with:
+          xml-file: pom.xml
+          xpath: '/ns:project/ns:properties/ns:graalvm.version'
+
+      - name: Define release name
+        id: release-name
+        env:
+          version: ${{github.ref}}
+        run: echo "::set-output name=name::${version} ($(date +%d.%m.%Y))"
+
+      - name: Create Release
+        id: create-release
+        uses: actions/create-release@v1.1.4  # TODO not maintained anymore. Change to another action.
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          tag_name: ${{github.ref}}
+          release_name: ${{steps.release-name.outputs.name}}
+          draft: true
+          prerelease: false
+
+    outputs:
+      slackMessageId: ${{steps.slack.outputs.message_id}}
+      releaseUrl: ${{steps.create-release.outputs.upload_url}}
+      graalvmVersion: ${{steps.graalvm-version.outputs.info}}
+
+  build-linux-aarch64:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 20
+    needs:
+      - prepare
+
+    steps:
+      # TODO graal-native build is very slow on qemu
+      #  use arm instance once available https://github.com/github/roadmap/issues/95
+      - name: Setup QEMU for docker
+        uses: docker/setup-qemu-action@v1.1.0
+        with:
+          platforms: arm64
+
+      - name: Setup docker buildx
+        uses: docker/setup-buildx-action@v1.3.0
+        with:
+          version: ${{env.buildxVersion}}
+
+      - name: Build docker image
+        uses: docker/build-push-action@v2.4.0
+        with:
+          platforms: arm64
+          tags: bin-builder
+          load: true
+          build-args: |
+            GRAALVM_VERSION=${{needs.prepare.outputs.graalvmVersion}}
+
+      - name: Get binary from docker image
+        run: |
+          docker create --name cp-bin bin-builder
+          docker cp cp-bin:/tunneling-mapping-parser .
+          docker cp cp-bin:/os .
+          docker cp cp-bin:/arch .
+          docker rm cp-bin
+
+      - name: Define asset name
+        id: asset-name
+        run: |
+          echo "::set-output name=os::$(cat os)"
+          echo "::set-output name=arch::$(cat arch)"
+
+      - name: Upload binary to release
+        uses: actions/upload-release-asset@v1.0.2  # TODO not maintained anymore. Change to another action.
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          upload_url: ${{needs.prepare.outputs.releaseUrl}}
+          asset_path: tunneling-mapping-parser
+          asset_name: tunneling-mapping-parser.${{steps.asset-name.outputs.os}}-${{steps.asset-name.outputs.arch}}
+          asset_content_type: application/octet-stream
+
+  build-x86_64:
+    runs-on: ${{matrix.os}}
+    timeout-minutes: 10
+    needs:
+      - prepare
+
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-20.04
+          - os: windows-2019
+            gu_suffix: .cmd
+            asset_suffix: .exe
+#           - os: macos-10.15  # Not supported for static linked libc: https://github.com/oracle/graal/issues/478#issuecomment-397984142
+
+    steps:
+      - name: Add MSVC to PATH  # See https://www.graalvm.org/reference-manual/native-image/#prerequisites
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1.8.0
+
+      - name: Setup GraalVM
+        uses: DeLaGuardo/setup-graalvm@4.0
+        with:
+          graalvm: ${{needs.prepare.outputs.graalvmVersion}}
+          java: java11
+
+      - run: gu${{matrix.gu_suffix}} install native-image
+
+      - uses: actions/checkout@v2.3.4
+
+      - name: Cache local Maven repository
+        uses: actions/cache@v2.1.5
+        with:
+          path: ~/.m2/repository
+          key: ${{runner.os}}-maven-${{hashFiles('pom.xml')}}
+          restore-keys: ${{runner.os}}-maven-
+
+      - run: ./mvnw package -B -P native
+
+      - name: Define asset name
+        id: asset-name
+        shell: bash
+        run: |
+          echo "::set-output name=os::${RUNNER_OS}"
+          echo "::set-output name=arch::x86_64"
+
+      - name: Upload binary to release
+        uses: actions/upload-release-asset@v1.0.2  # TODO not maintained anymore. Change to another action.
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          upload_url: ${{needs.prepare.outputs.releaseUrl}}
+          asset_path: target/tunneling-mapping-parser${{matrix.asset_suffix}}
+          asset_name: tunneling-mapping-parser.${{steps.asset-name.outputs.os}}-${{steps.asset-name.outputs.arch}}${{matrix.asset_suffix}}
+          asset_content_type: application/octet-stream
+
+  send-finished-notification:
+    runs-on: ubuntu-20.04
+    if: always()
+    timeout-minutes: 1
+    needs:
+      - prepare
+      - build-linux-aarch64
+      - build-x86_64
+
+    env:
+      SLACK_BOT_TOKEN: ${{secrets.SLACK_BOT_TOKEN}}
+
+    steps:
+      - uses: technote-space/workflow-conclusion-action@v2.1.6
+
+      - name: Notify slack success
+        uses: voxmedia/github-action-slack-notify-build@v1.5.0
+        if: env.WORKFLOW_CONCLUSION == 'success'
+        with:
+          message_id: ${{needs.prepare.outputs.slackMessageId}}
+          channel: ${{env.slackNotificationsChannel}}
+          status: '${{env.WORKFLOW_CONCLUSION}} #${{github.run_number}}'
+          color: good
+
+      - name: Notify slack fail
+        uses: voxmedia/github-action-slack-notify-build@v1.5.0
+        if: env.WORKFLOW_CONCLUSION != 'success'
+        with:
+          message_id: ${{needs.prepare.outputs.slackMessageId}}
+          channel: ${{env.slackNotificationsChannel}}
+          status: '${{env.WORKFLOW_CONCLUSION}} #${{github.run_number}} <!channel> please take a note of red build'
+          color: danger
