@@ -25,7 +25,7 @@ jobs:
     steps:
       - name: Notify slack start
         id: slack
-        uses: voxmedia/github-action-slack-notify-build@v1.5.0
+        uses: voxmedia/github-action-slack-notify-build@v2
         env:
           SLACK_BOT_TOKEN: ${{secrets.SLACK_BOT_TOKEN}}
         with:
@@ -187,7 +187,7 @@ jobs:
       - uses: technote-space/workflow-conclusion-action@v2.1.6
 
       - name: Notify slack success
-        uses: voxmedia/github-action-slack-notify-build@v1.5.0
+        uses: voxmedia/github-action-slack-notify-build@v2
         if: env.WORKFLOW_CONCLUSION == 'success'
         with:
           message_id: ${{needs.prepare.outputs.slackMessageId}}
@@ -196,7 +196,7 @@ jobs:
           color: good
 
       - name: Notify slack fail
-        uses: voxmedia/github-action-slack-notify-build@v1.5.0
+        uses: voxmedia/github-action-slack-notify-build@v2
         if: env.WORKFLOW_CONCLUSION != 'success'
         with:
           message_id: ${{needs.prepare.outputs.slackMessageId}}
