@@ -3,7 +3,7 @@
 
   <groupId>com.x2iq.tunneling</groupId>
   <artifactId>tunneling-mapping-parser</artifactId>
-  <version>2.2-SNAPSHOT</version>
+  <version>2.3-SNAPSHOT</version>
 
   <name>tunneling-mapping-parser</name>
 
