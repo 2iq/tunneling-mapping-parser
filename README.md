@@ -158,8 +158,8 @@ for i in `tunneling-mapping-parser -s`; do
 done
 
 # output:
-# forward psql (1234 -> 1.3.3.7:5432)
-# forward https (443 -> 4.8.15.16:443)
+# [1234 -> 1.3.3.7:5432] (forward psql)
+# [443 -> 4.8.15.16:443] (forward https)
 ```
 
 ### `-m, --get-mapping <mappingIndex>`
@@ -174,13 +174,13 @@ Examples:
 ```shell
 tunneling-mapping-parser -m 0
 # output:
-# forward psql (1234 -> 1.3.3.7:5432)
+# [1234 -> 1.3.3.7:5432] (forward psql)
 ```
 
 ```shell
 tunneling-mapping-parser --get-mapping 1
 # output:
-# forward https (443 -> 4.8.15.16:443)
+# [443 -> 4.8.15.16:443] (forward https)
 ```
 
 ### `-p, --property <propertyName>`
@@ -242,13 +242,13 @@ Examples:
 ```shell
 tunneling-mapping-parser -m 0 -f mapping.yml
 # output:
-# forward psql (1234 -> 1.3.3.7:5432)
+# [1234 -> 1.3.3.7:5432] (forward psql)
 ```
 
 ```shell
 tunneling-mapping-parser -m 0 --file /tmp/mapping.yml
 # output:
-# some other mapping rule (1337 -> 4.8.15.16:2342)
+# [1337 -> 4.8.15.16:2345] (some other mapping rule)
 ```
 
 ## Building
