@@ -40,7 +40,7 @@ jobs:
         id: graalvm-version
         with:
           xml-file: pom.xml
-          xpath: '/ns:project/ns:properties/ns:graalvm.version'
+          xpath: '/ns:project/ns:dependencies/ns:dependency[ns:groupId="org.graalvm.sdk" and ns:artifactId="graal-sdk"]/ns:version'
 
       - name: Define release name
         id: release-name
