@@ -46,7 +46,7 @@ jobs:
         id: release-name
         env:
           version: ${{github.ref}}
-        run: echo "::set-output name=name::${version} ($(date +%d.%m.%Y))"
+        run: echo "::set-output name=name::${version} ($(date +%Y-%m-%d))"
 
       - name: Create Release
         id: create-release
