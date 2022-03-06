@@ -34,7 +34,7 @@ jobs:
           status: 'running #${{github.run_number}}'
           color: warning
 
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v3.0.0
 
       - uses: walery/get-xml-info@master  # TODO use fixed version
         id: graalvm-version
@@ -144,7 +144,7 @@ jobs:
 
       - run: gu${{matrix.gu_suffix}} install native-image
 
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v3.0.0
 
       - name: Cache local Maven repository
         uses: actions/cache@v2.1.7
