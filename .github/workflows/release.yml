@@ -137,7 +137,7 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1.10.0
 
       - name: Setup GraalVM
-        uses: DeLaGuardo/setup-graalvm@4.0
+        uses: DeLaGuardo/setup-graalvm@5.0
         with:
           graalvm: ${{needs.prepare.outputs.graalvmVersion}}
           java: java11
