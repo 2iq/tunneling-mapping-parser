@@ -192,9 +192,9 @@
           <version>1.13.1</version>
         </plugin>
         <plugin>
-          <groupId>org.graalvm.nativeimage</groupId>
-          <artifactId>native-image-maven-plugin</artifactId>
-          <version>${graalvm.version}</version>
+          <groupId>org.graalvm.buildtools</groupId>
+          <artifactId>native-maven-plugin</artifactId>
+          <version>0.9.10</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -206,12 +206,14 @@
       <build>
         <plugins>
           <plugin>
-            <groupId>org.graalvm.nativeimage</groupId>
-            <artifactId>native-image-maven-plugin</artifactId>
+            <groupId>org.graalvm.buildtools</groupId>
+            <artifactId>native-maven-plugin</artifactId>
+            <extensions>true</extensions>
             <executions>
               <execution>
+                <id>build-native</id>
                 <goals>
-                  <goal>native-image</goal>
+                  <goal>build</goal>
                 </goals>
                 <phase>package</phase>
               </execution>
