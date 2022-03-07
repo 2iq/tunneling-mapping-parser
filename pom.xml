@@ -3,7 +3,7 @@
 
   <groupId>com.x2iq.tunneling</groupId>
   <artifactId>tunneling-mapping-parser</artifactId>
-  <version>2.3-SNAPSHOT</version>
+  <version>2.3</version>
 
   <name>tunneling-mapping-parser</name>
 
@@ -291,7 +291,7 @@
     <connection>scm:git:git://github.com/2iq/tunneling-mapping-parser.git</connection>
     <developerConnection>scm:git:ssh://github.com:2iq/tunneling-mapping-parser.git</developerConnection>
     <url>http://github.com/2iq/tunneling-mapping-parser/tree/main</url>
-    <tag>HEAD</tag>
+    <tag>2.3</tag>
   </scm>
 
   <organization>
