@@ -84,7 +84,7 @@ jobs:
           version: ${{env.buildxVersion}}
 
       - name: Build docker image
-        uses: docker/build-push-action@v2.4.0
+        uses: docker/build-push-action@v3.0.0
         with:
           platforms: arm64
           tags: bin-builder
